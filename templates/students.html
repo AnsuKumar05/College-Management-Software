@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Students - College Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-user-graduate me-2"></i>Student Management
+    </h2>
+    <a href="{{ url_for('add_student') }}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Add New Student
+    </a>
+</div>
+
+{% if students %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-list me-2"></i>All Students ({{ students|length }})
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                        <th>Department</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td><strong>{{ student.id }}</strong></td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.course }}</td>
+                        <td>{{ student.department }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('edit_student', student_id=student.id) }}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{{ url_for('report_card', student_id=student.id) }}" 
+                                   class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-file-alt"></i>
+                                </a>
+                                <a href="{{ url_for('delete_student', student_id=student.id) }}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this student?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+        <h4>No Students Found</h4>
+        <p class="text-muted">No students have been added to the system yet.</p>
+        <a href="{{ url_for('add_student') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add First Student
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>Quick Actions
+                </h6>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('add_student') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-user-plus me-2"></i>Add Student
+                    </a>
+                    <a href="{{ url_for('courses') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-book me-2"></i>Manage Courses
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-chart-bar me-2"></i>Statistics
+                </h6>
+                <p class="mb-1">Total Students: <strong>{{ students|length }}</strong></p>
+                <p class="mb-0">Active Enrollments: <strong>{{ students|length }}</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

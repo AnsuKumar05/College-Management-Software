@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Register - College Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4><i class="fas fa-user-plus me-2"></i>Register</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="registerForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Role</label>
+                                <select class="form-select" id="role" name="role" required onchange="toggleFields()">
+                                    <option value="">Select Role</option>
+                                    <option value="student">Student</option>
+                                    <option value="teacher">Teacher</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Teacher ID Field -->
+                    <div class="mb-3" id="teacherField" style="display: none;">
+                        <label for="teacher_id" class="form-label">Link to Teacher Profile (Optional)</label>
+                        <select class="form-select" id="teacher_id" name="teacher_id">
+                            <option value="">Select Teacher Profile</option>
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}">{{ teacher.name }} ({{ teacher.id }})</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">Link your account to an existing teacher profile if available.</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-2"></i>Register
+                        </button>
+                    </div>
+                </form>
+                <hr>
+                <div class="text-center">
+                    <p class="mb-2">Already have an account?</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleFields() {
+    const role = document.getElementById('role').value;
+    const studentField = document.getElementById('studentField');
+    const teacherField = document.getElementById('teacherField');
+    
+    if (role === 'student') {
+        studentField.style.display = 'block';
+        teacherField.style.display = 'none';
+    } else if (role === 'teacher') {
+        teacherField.style.display = 'block';
+        studentField.style.display = 'none';
+    } else {
+        studentField.style.display = 'none';
+        teacherField.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

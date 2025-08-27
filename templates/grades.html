@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Grades - College Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        <i class="fas fa-chart-line me-2"></i>Grades Management
+    </h2>
+    <a href="{{ url_for('add_grade') }}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Add Grade
+    </a>
+</div>
+
+{% if grades %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="fas fa-list me-2"></i>All Grades ({{ grades|length }})
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Course</th>
+                        <th>Exam Type</th>
+                        <th>Marks</th>
+                        <th>Max Marks</th>
+                        <th>Percentage</th>
+                        <th>Grade</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grades %}
+                    <tr>
+                        <td><strong>{{ grade.student_id }}</strong></td>
+                        <td>{{ grade.course_code }}</td>
+                        <td>{{ grade.exam_type }}</td>
+                        <td>{{ grade.marks }}</td>
+                        <td>{{ grade.max_marks }}</td>
+                        <td>{{ "%.1f"|format((grade.marks / grade.max_marks) * 100) }}%</td>
+                        <td>
+                            {% set percentage = (grade.marks / grade.max_marks) * 100 %}
+                            {% if percentage >= 90 %}
+                                <span class="badge bg-success">A+</span>
+                            {% elif percentage >= 80 %}
+                                <span class="badge bg-success">A</span>
+                            {% elif percentage >= 70 %}
+                                <span class="badge bg-info">B</span>
+                            {% elif percentage >= 60 %}
+                                <span class="badge bg-warning">C</span>
+                            {% else %}
+                                <span class="badge bg-danger">F</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ grade.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+        <h4>No Grades Found</h4>
+        <p class="text-muted">No grades have been recorded yet.</p>
+        <a href="{{ url_for('add_grade') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add First Grade
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>Quick Actions
+                </h6>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('add_grade') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-plus me-2"></i>Add Grade
+                    </a>
+                    <a href="{{ url_for('students') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-user-graduate me-2"></i>View Students
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-chart-bar me-2"></i>Grading Scale
+                </h6>
+                <div class="row">
+                    <div class="col-6">
+                        <small>A+: 90-100%</small><br>
+                        <small>A: 80-89%</small><br>
+                        <small>B: 70-79%</small>
+                    </div>
+                    <div class="col-6">
+                        <small>C: 60-69%</small><br>
+                        <small>F: Below 60%</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

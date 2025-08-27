@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Add Department - College Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus me-2"></i>Add New Department
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="code" class="form-label">Department Code *</label>
+                                <input type="text" class="form-control" id="code" name="code" required 
+                                       placeholder="e.g., CS, EE, ME">
+                                <div class="form-text">Short unique identifier for the department</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="head" class="form-label">Department Head</label>
+                                <input type="text" class="form-control" id="head" name="head" 
+                                       placeholder="Name of department head">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Department Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" required 
+                               placeholder="e.g., Computer Science, Electrical Engineering">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" 
+                                  placeholder="Brief description of the department"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('departments') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Departments
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Add Department
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>Information
+                </h6>
+                <ul class="list-unstyled mb-0">
+                    <li><i class="fas fa-check text-success me-2"></i>Department code must be unique</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Use short codes for easy identification</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Department head and description are optional</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Teachers and courses will be linked to departments</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

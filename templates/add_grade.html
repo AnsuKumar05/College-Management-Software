@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Add Grade - College Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus me-2"></i>Add Grade
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="student_id" class="form-label">Student *</label>
+                                <select class="form-select" id="student_id" name="student_id" required>
+                                    <option value="">Select a student</option>
+                                    {% for student in students %}
+                                    <option value="{{ student.id }}">{{ student.name }} ({{ student.id }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="course_code" class="form-label">Course *</label>
+                                <select class="form-select" id="course_code" name="course_code" required>
+                                    <option value="">Select a course</option>
+                                    {% for course in courses %}
+                                    <option value="{{ course.code }}">{{ course.name }} ({{ course.code }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="exam_type" class="form-label">Exam Type *</label>
+                                <select class="form-select" id="exam_type" name="exam_type" required>
+                                    <option value="">Select exam type</option>
+                                    <option value="Quiz">Quiz</option>
+                                    <option value="Assignment">Assignment</option>
+                                    <option value="Midterm">Midterm Exam</option>
+                                    <option value="Final">Final Exam</option>
+                                    <option value="Project">Project</option>
+                                    <option value="Lab">Lab Work</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date *</label>
+                                <input type="date" class="form-control" id="date" name="date" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="marks" class="form-label">Marks Obtained *</label>
+                                <input type="number" class="form-control" id="marks" name="marks" 
+                                       required min="0" step="0.1" placeholder="85">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="max_marks" class="form-label">Maximum Marks *</label>
+                                <input type="number" class="form-control" id="max_marks" name="max_marks" 
+                                       required min="1" step="0.1" placeholder="100">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="grade" class="form-label">Letter Grade</label>
+                                <select class="form-select" id="grade" name="grade">
+                                    <option value="">Auto-calculate</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A">A</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B">B</option>
+                                    <option value="C+">C+</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('grades') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Grades
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Add Grade
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>Grading Information
+                </h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Grading Scale:</strong>
+                        <ul class="list-unstyled mt-2">
+                            <li>A+: 90-100%</li>
+                            <li>A: 80-89%</li>
+                            <li>B: 70-79%</li>
+                            <li>C: 60-69%</li>
+                            <li>F: Below 60%</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Tips:</strong>
+                        <ul class="list-unstyled mt-2">
+                            <li>• Letter grade will be auto-calculated if not selected</li>
+                            <li>• Use decimal points for precise marking</li>
+                            <li>• All fields are required except letter grade</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set today's date as default
+    document.getElementById('date').valueAsDate = new Date();
+</script>
+{% endblock %}

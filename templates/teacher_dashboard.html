@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard - College Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-chalkboard-teacher me-2"></i>Teacher Dashboard</h2>
+    <div>
+        <span class="badge bg-success">{{ current_user.role|title }}</span>
+        {% if teacher %}
+            <span class="badge bg-info">{{ teacher.name }}</span>
+        {% endif %}
+    </div>
+</div>
+
+{% if teacher %}
+<!-- Teacher Profile -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-user me-2"></i>Profile Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Name:</strong> {{ teacher.name }}</p>
+                        <p><strong>Email:</strong> {{ teacher.email }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Department:</strong> {{ teacher.department }}</p>
+                        <p><strong>Phone:</strong> {{ teacher.phone or 'Not provided' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                <h5>Mark Attendance</h5>
+                <a href="{{ url_for('mark_attendance') }}" class="btn btn-light">
+                    <i class="fas fa-plus me-2"></i>Mark Attendance
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x mb-3"></i>
+                <h5>Add Grades</h5>
+                <a href="{{ url_for('add_grade') }}" class="btn btn-light">
+                    <i class="fas fa-plus me-2"></i>Add Grade
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-3x mb-3"></i>
+                <h5>View Courses</h5>
+                <a href="{{ url_for('courses') }}" class="btn btn-light">
+                    <i class="fas fa-list me-2"></i>All Courses
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assigned Courses -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-book me-2"></i>{% if teacher %}My Courses{% else %}All Courses{% endif %}</h5>
+            </div>
+            <div class="card-body">
+                {% if courses %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Credits</th>
+                                    <th>Department</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in courses %}
+                                <tr>
+                                    <td><span class="badge bg-primary">{{ course.code }}</span></td>
+                                    <td>{{ course.name }}</td>
+                                    <td>{{ course.credits }}</td>
+                                    <td>{{ course.department }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{{ url_for('attendance') }}" class="btn btn-outline-primary" title="View Attendance">
+                                                <i class="fas fa-calendar-check"></i>
+                                            </a>
+                                            <a href="{{ url_for('grades') }}" class="btn btn-outline-success" title="View Grades">
+                                                <i class="fas fa-chart-line"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">No courses assigned yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Management Tools -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-calendar-check me-2"></i>Attendance Management</h5>
+            </div>
+            <div class="card-body">
+                <p>Track and manage student attendance for your courses.</p>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('attendance') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-list me-2"></i>View All Attendance
+                    </a>
+                    <a href="{{ url_for('mark_attendance') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Mark Attendance
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line me-2"></i>Grade Management</h5>
+            </div>
+            <div class="card-body">
+                <p>Manage student grades and assessments.</p>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('grades') }}" class="btn btn-outline-success">
+                        <i class="fas fa-list me-2"></i>View All Grades
+                    </a>
+                    <a href="{{ url_for('add_grade') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-2"></i>Add Grade
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

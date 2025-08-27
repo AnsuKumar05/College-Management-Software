@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Report Card - {{ student.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <!-- Student Information -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-file-alt me-2"></i>Report Card
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Student Information</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>Student ID:</strong></td>
+                                <td>{{ student.id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Name:</strong></td>
+                                <td>{{ student.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Email:</strong></td>
+                                <td>{{ student.email }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Academic Information</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>Course:</strong></td>
+                                <td>{{ student.course or 'Not Assigned' }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Department:</strong></td>
+                                <td>{{ student.department or 'Not Assigned' }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Report Date:</strong></td>
+                                <td>{{ moment().format('YYYY-MM-DD') if moment else 'Today' }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Academic Performance
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if grades %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Exam Type</th>
+                                <th>Marks</th>
+                                <th>Max Marks</th>
+                                <th>Percentage</th>
+                                <th>Grade</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in grades %}
+                            <tr>
+                                <td>{{ grade.course_code }}</td>
+                                <td>{{ grade.exam_type }}</td>
+                                <td>{{ grade.marks }}</td>
+                                <td>{{ grade.max_marks }}</td>
+                                <td>{{ "%.1f"|format((grade.marks / grade.max_marks) * 100) }}%</td>
+                                <td>
+                                    {% set percentage = (grade.marks / grade.max_marks) * 100 %}
+                                    {% if percentage >= 90 %}
+                                        <span class="badge bg-success">A+</span>
+                                    {% elif percentage >= 80 %}
+                                        <span class="badge bg-success">A</span>
+                                    {% elif percentage >= 70 %}
+                                        <span class="badge bg-info">B</span>
+                                    {% elif percentage >= 60 %}
+                                        <span class="badge bg-warning">C</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">F</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ grade.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Grade Summary -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Overall Performance</h6>
+                                {% set total_percentage = grades|map(attribute='marks')|sum / grades|map(attribute='max_marks')|sum * 100 if grades %}
+                                {% if total_percentage %}
+                                <p class="card-text">
+                                    <strong>Average: {{ "%.1f"|format(total_percentage) }}%</strong>
+                                </p>
+                                <p class="card-text">
+                                    Overall Grade: 
+                                    {% if total_percentage >= 90 %}
+                                        <span class="badge bg-success">A+</span>
+                                    {% elif total_percentage >= 80 %}
+                                        <span class="badge bg-success">A</span>
+                                    {% elif total_percentage >= 70 %}
+                                        <span class="badge bg-info">B</span>
+                                    {% elif total_percentage >= 60 %}
+                                        <span class="badge bg-warning">C</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">F</span>
+                                    {% endif %}
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Grade Statistics</h6>
+                                <p class="card-text">Total Assessments: <strong>{{ grades|length }}</strong></p>
+                                <p class="card-text">Highest Score: <strong>{{ grades|map(attribute='marks')|max if grades }}{{ '/' + (grades|map(attribute='max_marks')|max|string) if grades }}</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                    <h5>No Grades Available</h5>
+                    <p class="text-muted">No grades have been recorded for this student yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Attendance Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-check me-2"></i>Attendance Record
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if attendance %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Course</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in attendance %}
+                            <tr>
+                                <td>{{ record.date }}</td>
+                                <td>{{ record.course_code }}</td>
+                                <td>
+                                    {% if record.status == 'Present' %}
+                                        <span class="badge bg-success">{{ record.status }}</span>
+                                    {% elif record.status == 'Absent' %}
+                                        <span class="badge bg-danger">{{ record.status }}</span>
+                                    {% elif record.status == 'Late' %}
+                                        <span class="badge bg-warning">{{ record.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-info">{{ record.status }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Attendance Summary -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Attendance Summary</h6>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <p class="mb-1">Total Classes: <strong>{{ attendance|length }}</strong></p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p class="mb-1">Present: <strong>{{ attendance|selectattr('status', 'equalto', 'Present')|list|length }}</strong></p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p class="mb-1">Absent: <strong>{{ attendance|selectattr('status', 'equalto', 'Absent')|list|length }}</strong></p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        {% set present_count = attendance|selectattr('status', 'equalto', 'Present')|list|length %}
+                                        {% set total_count = attendance|length %}
+                                        <p class="mb-1">Attendance Rate: 
+                                            <strong>
+                                                {% if total_count > 0 %}
+                                                    {{ "%.1f"|format((present_count / total_count) * 100) }}%
+                                                {% else %}
+                                                    0%
+                                                {% endif %}
+                                            </strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <h5>No Attendance Records</h5>
+                    <p class="text-muted">No attendance has been recorded for this student yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mb-4">
+            <a href="{{ url_for('students') }}" class="btn btn-secondary me-2">
+                <i class="fas fa-arrow-left me-2"></i>Back to Students
+            </a>
+            <a href="{{ url_for('edit_student', student_id=student.id) }}" class="btn btn-primary me-2">
+                <i class="fas fa-edit me-2"></i>Edit Student
+            </a>
+            <button onclick="window.print()" class="btn btn-info">
+                <i class="fas fa-print me-2"></i>Print Report
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .btn, .navbar, .card-header { display: none !important; }
+    .card { border: none !important; box-shadow: none !important; }
+}
+</style>
+{% endblock %}

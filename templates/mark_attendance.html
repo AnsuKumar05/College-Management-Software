@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Mark Attendance - College Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-check me-2"></i>Mark Attendance
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="student_id" class="form-label">Student *</label>
+                                <select class="form-select" id="student_id" name="student_id" required>
+                                    <option value="">Select a student</option>
+                                    {% for student in students %}
+                                    <option value="{{ student.id }}">{{ student.name }} ({{ student.id }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="course_code" class="form-label">Course *</label>
+                                <select class="form-select" id="course_code" name="course_code" required>
+                                    <option value="">Select a course</option>
+                                    {% for course in courses %}
+                                    <option value="{{ course.code }}">{{ course.name }} ({{ course.code }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date *</label>
+                                <input type="date" class="form-control" id="date" name="date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Attendance Status *</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="">Select status</option>
+                                    <option value="Present">Present</option>
+                                    <option value="Absent">Absent</option>
+                                    <option value="Late">Late</option>
+                                    <option value="Excused">Excused</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('attendance') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Attendance
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Mark Attendance
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-info-circle me-2"></i>Attendance Status Guide
+                </h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><span class="badge bg-success me-2">Present</span> Student attended the class</li>
+                            <li><span class="badge bg-danger me-2">Absent</span> Student did not attend</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><span class="badge bg-warning me-2">Late</span> Student arrived late</li>
+                            <li><span class="badge bg-info me-2">Excused</span> Authorized absence</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set today's date as default
+    document.getElementById('date').valueAsDate = new Date();
+</script>
+{% endblock %}

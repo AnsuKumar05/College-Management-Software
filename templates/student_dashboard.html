@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">
+        <i class="fas fa-home me-2"></i> Welcome, {{ current_user.username }}!
+    </h2>
+
+    <!-- Profile Information -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i> Profile Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><i class="fas fa-id-badge me-2 text-secondary"></i><strong>Name:</strong> {{ current_user.username }}</p>
+                    <p><i class="fas fa-envelope me-2 text-secondary"></i><strong>Email:</strong> {{ current_user.email }}</p>
+                    <p><i class="fas fa-user-tag me-2 text-secondary"></i><strong>Role:</strong> {{ current_user.role }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grades Section -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i> Grades</h5>
+                </div>
+                <div class="card-body">
+                    {% if grades %}
+                        <table class="table table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><i class="fas fa-book me-2"></i>Course</th>
+                                    <th><i class="fas fa-star me-2"></i>Grade</th>
+                                    <th><i class="fas fa-calendar-alt me-2"></i>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for grade in grades %}
+                                    <tr>
+                                        <td>{{ grade.course }}</td>
+                                        <td><span class="badge bg-info">{{ grade.grade }}</span></td>
+                                        <td>{{ grade.date }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-graduation-cap fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No grades available yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Section -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i> Attendance</h5>
+                </div>
+                <div class="card-body">
+                    {% if attendance %}
+                        <table class="table table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><i class="fas fa-calendar-day me-2"></i>Date</th>
+                                    <th><i class="fas fa-check-circle me-2"></i>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in attendance %}
+                                    <tr>
+                                        <td>{{ record.date }}</td>
+                                        <td>
+                                            {% if record.status == 'Present' %}
+                                                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Present</span>
+                                            {% else %}
+                                                <span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i> Absent</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-check fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No attendance records yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
